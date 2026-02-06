@@ -6,10 +6,10 @@
     "dev": "NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.7.1",
+    "@clerk/nextjs": "^6.37.3",
     "@neondatabase/serverless": "^0.6.0",
     "@tanstack/react-table": "^8.15.3",
     "aws-sdk": "^2.1594.0",
@@ -18,26 +18,32 @@
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.30.9",
     "lucide-react": "^0.365.0",
-    "next": "13.5.5",
+    "next": "16.1.6",
     "pg": "^8.11.3",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "react-webcam": "^7.2.0",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.2.13",
+    "@types/react-dom": "19.2.3",
     "autoprefixer": "^10",
     "drizzle-kit": "^0.24.0",
-    "eslint": "^8",
-    "eslint-config-next": "13.5.5",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
     "postcss": "^8",
     "postgres": "^3.4.4",
     "prettier": "3.1.0",
     "tailwindcss": "^3",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.13",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }
