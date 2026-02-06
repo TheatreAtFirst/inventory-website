@@ -19,7 +19,8 @@ async function getAllTags() {
     return allTags;
 }
 
-export default async function Page({ params }: { params: { id: number } }) {
+export default async function Page(props: { params: Promise<{ id: number }> }) {
+    const params = await props.params;
     /* WHY AM I MAKING A DB QUERY DIRECTLY IN THE COMPONENT?
      *  This component is a server component. That means that none of the code
      *  in this file executes on the client -- it is all executed on the server

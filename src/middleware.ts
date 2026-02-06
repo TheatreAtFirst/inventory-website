@@ -4,8 +4,8 @@ const isProtectedRoute = createRouteMatcher(['/item-upload', '/update-tags', '/e
 const isProtectedPostRoute = createRouteMatcher(['/item', '/edit(.*)'])
 
 export default clerkMiddleware((auth, req) => {
-    if (isProtectedRoute(req)) auth().protect()
-    if (isProtectedPostRoute(req) && req.method === 'GET') auth().protect()
+    if (isProtectedRoute(req)) auth.protect()
+    if (isProtectedPostRoute(req) && req.method === 'GET') auth.protect()
 })
 
 export const config = {

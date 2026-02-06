@@ -1,8 +1,6 @@
 //GET request
-export async function GET(
-    _request: Request,
-    { params }: { params: { filepath: string } }
-) {
+export async function GET(_request: Request, props: { params: Promise<{ filepath: string }> }) {
+    const params = await props.params;
     let r2response: {
         status: number;
         object?: string;
@@ -29,10 +27,8 @@ export async function GET(
 }
 
 //POST request -- utilize insomnia
-export async function POST(
-    request: Request,
-    { params }: { params: { filepath: string } }
-) {
+export async function POST(request: Request, props: { params: Promise<{ filepath: string }> }) {
+    const params = await props.params;
     let json = await request.json();
     let r2response: {
         status: number;
