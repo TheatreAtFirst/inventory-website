@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 interface Props {
     title: string;
     image: string;
@@ -14,9 +16,13 @@ function DesktopItem(props: Props) {
         <a href={`/item/${props.id}`}>
             <div className="hidden md:flex h-80 w-60 rounded-xl shadow-md">
                 <div className="h-full flex flex-col">
-                    <img
+                    <Image
                         src={props.image}
                         alt=""
+                        width={60}
+                        height={60}
+                        quality={30}
+                        unoptimized={false}
                         className="h-60 w-60 rounded-t-xl"
                     />
                     <div className="p-3">
@@ -41,10 +47,13 @@ function MobileItem(props: Props) {
     return (
         <a href={`/item/${props.id}`} className="px-5">
             <div className="md:hidden w-full shadow-md">
-                <img
+                <Image
                     src={props.image}
                     alt=""
+                    width={288}
+                    height={288}
                     className="max-h-72"
+                    unoptimized={false}
                 />
                 <div className="p-3">
                     <p className="text-[#496767] font-bold text-base mb-2">
