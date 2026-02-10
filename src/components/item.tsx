@@ -21,7 +21,6 @@ function DesktopItem(props: Props) {
                         alt=""
                         width={60}
                         height={60}
-                        quality={70}
                         unoptimized={false}
                         className="h-60 w-60 rounded-t-xl"
                     />
