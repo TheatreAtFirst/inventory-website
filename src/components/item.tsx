@@ -19,10 +19,11 @@ function DesktopItem(props: Props) {
                     <Image
                         src={props.image}
                         alt=""
-                        width={60}
-                        height={60}
+                        width={288}
+                        height={288}
                         unoptimized={false}
                         className="h-60 w-60 rounded-t-xl"
+                        style={{objectFit: "cover"}}
                     />
                     <div className="p-3">
                         <p className="text-[#496767] font-bold text-base mb-2">
@@ -53,6 +54,7 @@ function MobileItem(props: Props) {
                     height={288}
                     className="max-h-72"
                     unoptimized={false}
+                    style={{objectFit: "cover"}}
                 />
                 <div className="p-3">
                     <p className="text-[#496767] font-bold text-base mb-2">
