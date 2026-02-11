@@ -5,9 +5,6 @@ import ItemDetail from "@/components/itemDetail";
 import { ArrowLeftCircle } from "@/components/buttonGraphics";
 import ImageNotFound from "@/../public/images/imageNotFound.jpg";
 
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-
 import { items } from "@/db/schema";
 import db from "@/db/drizzle";
 import { eq } from "drizzle-orm";
@@ -61,7 +58,6 @@ export default async function Page({ params }: { params: { id: number } }) {
 
     return (
         <main className="bg-white min-h-screen flex flex-col justify-between">
-            <Header />
             <div className="p-8 w-full h-full flex flex-col lg:flex-row justify-center items-center">
                 <Image
                     src={ itemData.imageUrl || ImageNotFound}
@@ -96,7 +92,6 @@ export default async function Page({ params }: { params: { id: number } }) {
                     )}
                 </div>
             </div>
-            <Footer />
         </main>
     );
 }

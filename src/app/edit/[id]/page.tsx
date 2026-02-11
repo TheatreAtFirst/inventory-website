@@ -3,8 +3,6 @@ import db from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import ItemEdit from "@/components/itemEditForm";
 import { ChevronLeft } from "@/components/buttonGraphics";
 
@@ -77,7 +75,6 @@ export default async function Page({ params }: { params: { id: number } }) {
 
     return (
         <main className="bg-white w-screen min-h-screen">
-            <Header />
             <div className="p-8 w-full h-full flex flex-col lg:flex-row justify-center items-center">
                 <div className="py-10 lg:px-10 bg-white lg:w-[50%] space-y-5 w-full h-full">
                     <div className={"pt-10 pb-5 grid grid-cols divide-y-2"}>
@@ -96,7 +93,6 @@ export default async function Page({ params }: { params: { id: number } }) {
                     <ItemEdit itemData={itemData} allTags={tags} updateItem={updateItem}></ItemEdit>
                 </div>
             </div>
-            <Footer />
         </main>
     );
 }

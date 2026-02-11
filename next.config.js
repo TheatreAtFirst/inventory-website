@@ -13,6 +13,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/inventory',
+        destination: '/',
+        permanent: true,
+      },
+    ]
+  },
 }
 
-module.exports = nextConfig
+export default nextConfig
