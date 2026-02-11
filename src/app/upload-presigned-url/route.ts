@@ -7,7 +7,7 @@ const s3 = new S3({
     signatureVersion: "v4",
 });
 
-export const POST = async (request: Request) => {
+export const POST = async () => {
     const filename = `image-${Date.now()}.jpeg`;
 
     const presignedUrl = await s3.getSignedUrlPromise("putObject", {

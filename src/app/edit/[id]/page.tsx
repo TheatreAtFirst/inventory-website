@@ -44,13 +44,6 @@ export default async function Page({ params }: { params: { id: number } }) {
 
     const tags = await getAllTags();
 
-    let images: string[];
-    if (itemData.imageUrl) {
-        images = [itemData.imageUrl];
-    } else {
-        images = [];
-    }
-
     async function updateItem(formData: FormData) {
         // https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations
         "use server";
@@ -61,7 +54,7 @@ export default async function Page({ params }: { params: { id: number } }) {
         const category = (formData.get('category') || itemData.category || "").toString();
         const imageUrl = (formData.get('imageUrl') === "" ? "" : formData.get('imageUrl') || itemData.imageUrl || "").toString();
 
-        let result = await db.update(items)
+        await db.update(items)
             .set({ name, desc, category, imageUrl })
             .where(eq(items.id, itemData.id))
             .returning();

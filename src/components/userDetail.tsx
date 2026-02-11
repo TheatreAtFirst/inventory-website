@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 
 interface UserDetailTestProps {
     /* We wanted to make this an array of strings with just the options from the

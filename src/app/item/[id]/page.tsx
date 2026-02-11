@@ -1,4 +1,3 @@
-import ImageCarousel from "@/components/imageCarousel";
 import Image from "next/image";
 import ItemDetail from "@/components/itemDetail";
 
@@ -46,13 +45,6 @@ export default async function Page({ params }: { params: { id: number } }) {
     }
 
     revalidatePath(`/edit/${itemData.id}`);
-
-    let images: string[];
-    if (itemData.imageUrl) {
-        images = [itemData.imageUrl];
-    } else {
-        images = [];
-    }
 
     const allTags = await getAllTags();
 
