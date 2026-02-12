@@ -29,14 +29,16 @@ export default function ImageCaptureButtons({ imageCallback, setUrlCallback, old
     const [manualPhotoUrl, setManualPhotoUrl] = useState(oldImageUrl || "");
 
     useEffect(() => {
-        navigator.mediaDevices
-            .getUserMedia({ video: true })
-            .catch((error: Error) => {
-                if (error.name === "NotAllowedError") {
-                    setHasPermission(false);
-                }
-            });
-    }, []);
+        if (imageCaptureMethod === ImageCaptureMethod.CAPTURE) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .catch((error: Error) => {
+                    if (error.name === "NotAllowedError") {
+                        setHasPermission(false);
+                    }
+                });
+        }
+    }, [imageCaptureMethod]);
 
     const videoConstraints = {
         width: 1080,
