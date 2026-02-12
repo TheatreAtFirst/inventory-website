@@ -3,8 +3,6 @@ import {
     Dispatch,
     SetStateAction,
     useState,
-    KeyboardEvent,
-    KeyboardEventHandler,
 } from "react";
 
 //DROPDOWN:

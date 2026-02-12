@@ -1,12 +1,8 @@
-import ImageCarousel from "@/components/imageCarousel";
 import Image from "next/image";
 import ItemDetail from "@/components/itemDetail";
 
 import { ArrowLeftCircle } from "@/components/buttonGraphics";
 import ImageNotFound from "@/../public/images/imageNotFound.jpg";
-
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 
 import { items } from "@/db/schema";
 import db from "@/db/drizzle";
@@ -50,18 +46,10 @@ export default async function Page({ params }: { params: { id: number } }) {
 
     revalidatePath(`/edit/${itemData.id}`);
 
-    let images: string[];
-    if (itemData.imageUrl) {
-        images = [itemData.imageUrl];
-    } else {
-        images = [];
-    }
-
     const allTags = await getAllTags();
 
     return (
         <main className="bg-white min-h-screen flex flex-col justify-between">
-            <Header />
             <div className="p-8 w-full h-full flex flex-col lg:flex-row justify-center items-center">
                 <Image
                     src={ itemData.imageUrl || ImageNotFound}
@@ -96,7 +84,6 @@ export default async function Page({ params }: { params: { id: number } }) {
                     )}
                 </div>
             </div>
-            <Footer />
         </main>
     );
 }

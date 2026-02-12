@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import TagEditor from "./tagEditor";
 
 interface ItemDetailProps {
@@ -12,20 +11,7 @@ interface ItemDetailProps {
     status: string;
 }
 
-// make request to API to get list of updates
-const updates: string[] = ["Update One", "Update Two", "Update Three"];
-
 export default function ItemDetail(props: ItemDetailProps) {
-    const [display, setDisplay] = useState(false);
-
-    const handleMouseEnter = () => {
-        setDisplay(true);
-    };
-
-    const handleMouseLeave = () => {
-        setDisplay(false);
-    };
-
     const status_color = props.status == "In Stock" ? "[#11763D]" : "[#DF1642]";
 
     return (
@@ -36,17 +22,6 @@ export default function ItemDetail(props: ItemDetailProps) {
             >
                 {props.category}
             </p>
-            <div>
-                {display && (
-                    <div className="">
-                        {updates.map((update) => (
-                            <div key={update} className="py-2">
-                                <p>{update}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
             <div className="flex flex-row gap-6 flex-wrap">
                 <TagEditor itemId={props.id} tags={props.allTags} initialTags={props.tags} />
             </div>

@@ -7,8 +7,6 @@
 
 import {
     serial,
-    integer,
-    date,
     text,
     pgTableCreator,
     pgEnum,

@@ -1,161 +1,184 @@
-//This page is an example of the clerk client working; currently everything is
-//public and requires no authentication or signing in if you go to local host
-import { UserButton } from "@clerk/nextjs";
-import Image from "next/image";
+"use client";
+import SelectionComponent from "@/components/collectionViewFilter/selectionComponent";
+import DisplayComponent from "@/components/collectionViewFilter/displayComponent";
+import Item from "@/components/item";
+import Grid from "@/components/grid";
+import { useState, useEffect, useCallback } from "react";
+import { SelectItem } from "@/db/schema";
+
+import { revalidatePaths } from "./actions";
+
+async function getTableData(): Promise<SelectItem[]> {
+    return await fetch("/list-items", {
+        method: "GET",
+    })
+        .then((response) => response.json())
+        .then((json) => json.results);
+}
+
+async function getTagData(): Promise<string[]> {
+    return await fetch("/list-tags", {
+        method: "GET",
+    })
+        .then((response) => response.json())
+        .then((json) => json.results);
+}
+
+async function getCategoryData(): Promise<string[]> {
+    return await fetch("/list-categories", {
+        method: "GET",
+    })
+        .then((response) => response.json())
+        .then((json) => json.results);
+}
+
+const filterData = (arr: SelectItem[], searchText: string, searchCategories: string[], searchTags: string[]): SelectItem[] => {
+    const categoryMatches = searchCategories.length > 0 ? arr.filter((item: SelectItem): boolean => {
+        if (item.category) {
+            return searchCategories.includes(item.category.toLowerCase().trim());
+        }
+        return false;
+    }) : arr;
+
+    const tagMatches = searchTags.length > 0 ? categoryMatches.filter(item =>
+        searchTags.every(tag => item.tags.map(t => t.toLowerCase().trim()).includes(tag))
+    ) : categoryMatches;
+
+    const searchWords = searchText.toLowerCase().split(" ");
+    const results = searchWords.length > 0 ? tagMatches.filter((result: SelectItem): boolean => {
+        const text: string =
+            result.name.toLowerCase() + " " +
+            result.desc.toLowerCase() + " " +
+            result.category?.toLowerCase() + " " +
+            result.tags.reduce((acc, tag) => acc + " " + tag.toLowerCase(), "");
+
+        //Find matches one word at a time
+        return searchWords.every((word) => text.includes(word));
+    }) : tagMatches;
+
+    return results;
+};
 
 export default function Home() {
+    const [categories, setCategories] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+    const [searchInput, setSearchInput] = useState("");
+    const [unfiltered, setUnfiltered] = useState<SelectItem[]>([]);
+    const [filteredResults, setFilteredResults] = useState<SelectItem[]>([]);
+
+    useEffect(() => {
+        revalidatePaths(["/list-items"]).then(() => {
+            getTableData().then((data) => {
+                setUnfiltered(data);
+                setFilteredResults(data);
+            });
+            getTagData().then(setTags);
+            getCategoryData().then(setCategories);
+        });
+    }, []);
+
+    const updateSearchResults = useCallback((searchTerm: string, sTags: string[], sCategories: string[]) => {
+        if (searchTerm.length > 0 || sTags.length > 0 || sCategories.length > 0) {
+            setFilteredResults(
+                filterData(unfiltered,
+                           searchTerm,
+                           sCategories.map(c => c.toLowerCase().trim()),
+                           sTags.map(t => t.toLowerCase().trim())));
+        } else {
+            setFilteredResults(unfiltered);
+        }
+    }, [unfiltered]);
+
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const input_text: string = event.target.value;
+        event.preventDefault();
+        setSearchInput(input_text);
+        updateSearchResults(input_text, selectedTags, selectedCategories);
+    };
+
+    useEffect(() => {
+        // Call the updateSearchResults function whenever selectedTags changes.
+        // Use the current search input along with the updated tags.
+        updateSearchResults(searchInput, selectedTags, selectedCategories);
+    }, [selectedTags, selectedCategories, searchInput, updateSearchResults]);
+
     return (
-        <div className="bg-white bg-gradient-to-br to-[#ffae453f] from-white from-[1%] text-[#0C1D1D]">
-            <div className="px-[2rem] sm:px-[4rem] lg:px-[6rem] ">
-                <div className="flex flex-col justify-center align-middle py-32 gap-8">
-                    <p className="text-center  text-[30px] sm:text-[40px] md:text-[60px] lg:text-[90px] leading-tight font-bold">
-                        All Your Inventory In One Place.
-                    </p>
-                    <Image
-                        alt="JumboCode x Theatre@First"
-                        src="/images/landing_icons.png"
-                        width="251"
-                        height="113"
-                        className="mx-auto"
-                    ></Image>
-                    <div>
-                        <p className="text-center text-[#839996]">
-                            Your one-stop inventory management system designed
-                            by JumboCode specifically for Theatre@First.
-                        </p>
-                        <p className="text-center text-[#839996]">
-                            Streamline your organization&apos;s inventory
-                            tracking process, ensuring smooth operations for
-                            your productions.
-                        </p>
-                    </div>
-                    <a
-                        href="/inventory"
-                        className="mx-auto py-4 px-10 bg-[#0C2B35] hover:bg-[#496767] text-white text-center rounded-3xl"
+        <main className="min-h-max bg-white flex flex-col">
+            <div className="px-5 md:px-10 pt-10">
+                <div className="p-4">
+                    <h1 className="text-4xl font-bold pb-8 text-[#0C2B35]">
+                        Inventory
+                    </h1>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#EE7200"
+                        className="w-6 h-6 absolute m-2 ml-4"
                     >
-                        Get Started
-                    </a>
-                    <Image
-                        alt="Add New Product page"
-                        src="/images/landing_1.png"
-                        width="1108"
-                        height="496"
-                        className="mx-auto"
-                    ></Image>
+                        <path
+                            fillRule="evenodd"
+                            d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+                    <input
+                        onInput={handleSearch}
+                        value={searchInput}
+                        placeholder="Search for an item"
+                        className="bg-gray-100 w-full placeholder-[#B7B7B7] pl-12 p-2 outline outline-[2px] outline-[#496767] rounded-3xl text-[#0C2B35] w-[268px]"
+                    ></input>
                 </div>
-                <div className="flex flex-col justify-center mx-auto pb-[100px]">
-                    <div className="flex flex-col gap-5">
-                        <p className="text-[40px] lg:text-[60px] font-bold text-center">
-                            Our Key Features
-                        </p>
-                        <p className="text-center text-[#839996]">
-                            Our platform helps Theatre@First better manage their
-                            inventory system
-                        </p>
+                <div className="flex flex-col">
+                    <div className="flex flex-row flex-wrap">
+                        <div className="w-full md:w-[300px]">
+                            <SelectionComponent
+                                tags={categories}
+                                setTags={setCategories}
+                                selectedTags={selectedCategories}
+                                setSelectedTags={setSelectedCategories}
+                                category="category"
+                            ></SelectionComponent>
+                        </div>
+                        <div className="w-full md:w-[300px]">
+                            <SelectionComponent
+                                tags={tags}
+                                setTags={setTags}
+                                selectedTags={selectedTags}
+                                setSelectedTags={setSelectedTags}
+                                category="Tags"
+                            ></SelectionComponent>
+                        </div>
                     </div>
-                    <div className="flex flex-row align-middle justify-center items-center gap-12 pt-12 flex-wrap md:flex-nowrap">
-                        <div className="w-[1/2] flex flex-col gap-6 py-12">
-                            <div className="flex flex-row align-top justify-start gap-6 md:gap-8">
-                                <Image
-                                    alt="Inventory tracking icon"
-                                    src="/images/landing_key_features_icon.svg"
-                                    width="51"
-                                    height="51"
-                                    className="w-[40px] h-[40px] md:w-[51px] md:h-[51px] pt-2"
-                                ></Image>
-                                <div className="shrink">
-                                    <p className="text-[24px] font-[600] pb-2">
-                                        Inventory Tracking
-                                    </p>
-                                    <p className="text-[#839996]">
-                                        Easily monitor and manage all costumes,
-                                        props, set pieces, and equipment across
-                                        productions.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-row align-top gap-6 md:gap-8">
-                                <Image
-                                    alt="Inventory tracking icon"
-                                    src="/images/landing_key_features_icon.svg"
-                                    width="51"
-                                    height="51"
-                                    className="w-[40px] h-[40px] md:w-[51px] md:h-[51px] pt-2"
-                                ></Image>
-                                <div className="shrink">
-                                    <p className="text-[24px] font-[600] pb-2">
-                                        Customizable Categories
-                                    </p>
-                                    <p className="text-[#839996]">
-                                        Tailor the system to your specific needs
-                                        with customizable categories for items.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-row align-top gap-6 md:gap-8">
-                                <Image
-                                    alt="Inventory tracking icon"
-                                    src="/images/landing_key_features_icon.svg"
-                                    width="51"
-                                    height="51"
-                                    className="w-[40px] h-[40px] md:w-[51px] md:h-[51px] pt-2"
-                                ></Image>
-                                <div className="shrink">
-                                    <p className="text-[24px] font-[600] pb-2">
-                                        Collaborative Platform
-                                    </p>
-                                    <p className="text-[#839996]">
-                                        Facilitate collaboration among
-                                        production teams with shared access and
-                                        communication features
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="basics-1/2">
-                            <Image
-                                alt="User Permissions"
-                                src="/images/landing_user_permissions.png"
-                                width="608"
-                                height="413"
-                                className=""
-                            ></Image>
-                        </div>
+                    <div className="p-4 border-zinc-950">
+                        <DisplayComponent
+                            selectedTags={selectedTags}
+                            setSelectedTags={setSelectedTags}
+                            selectedCategories={selectedCategories}
+                            setSelectedCategories={setSelectedCategories}
+                        ></DisplayComponent>
                     </div>
                 </div>
             </div>
-            <div className="h-[570px] flex flex-row flex-wrap md:flex-nowrap align-middle justify-center items-center gap pb-48">
-                <div className="flex flex-col gap-12 basis-1/2 flex-auto p-8 md:p-24 justify-center items-center md:items-start">
-                    <p className="text-[30px] md:text-[40px] font-[700] leading-tight text-center md:text-left flex-auto">
-                        Start Tracking Your Theatrical Inventory System Today
-                    </p>
-                    <p className="text-[#839996] text-center md:text-left">
-                        Sign up or log in to start using our platform.
-                    </p>
-                    <div className="flex flex-row gap-4 align-middle w-fit">
-                        <a
-                            href="/inventory"
-                            className="mx-auto py-4 px-10 bg-[#496767] text-white text-center rounded-3xl min-w-max"
-                        >
-                            Sign Up
-                        </a>
-                        <a
-                            href="/inventory"
-                            className="mx-auto py-4 px-10 bg-[#0C2B35] hover:bg-[#496767] text-white text-center rounded-3xl min-w-max"
-                        >
-                            Log In
-                        </a>
-                    </div>
-                </div>
-                <div className="basis-1/2 flex-initial">
-                    <Image
-                        alt="Inventory View"
-                        src="/images/landing_inventory.png"
-                        width="1000"
-                        height="478"
-                    ></Image>
-                </div>
+            <div className="bg-[#B4CDCA] w-full h-2 mb-5 md:mb-10"></div>
+            <div className="px-4 md:px-14">
+                <Grid
+                    components={filteredResults.map((result) => (
+                        <Item
+                            title={result.name}
+                            category={result.category || "Uncategorized"}
+                            image={
+                                result.imageUrl ||
+                                "/images/imageNotFound.jpg"
+                            }
+                            key={result.id}
+                            id={result.id}
+                        />
+                    ))}
+                />
             </div>
-        </div>
+        </main>
     );
 }
