@@ -3,6 +3,7 @@ import SelectionComponent from "@/components/collectionViewFilter/selectionCompo
 import DisplayComponent from "@/components/collectionViewFilter/displayComponent";
 import Item from "@/components/item";
 import Grid from "@/components/grid";
+import { Search } from "@/components/icons"
 import { useState, useEffect, useCallback } from "react";
 import { SelectItem } from "@/db/schema";
 
@@ -84,9 +85,9 @@ export default function Home() {
         if (searchTerm.length > 0 || sTags.length > 0 || sCategories.length > 0) {
             setFilteredResults(
                 filterData(unfiltered,
-                           searchTerm,
-                           sCategories.map(c => c.toLowerCase().trim()),
-                           sTags.map(t => t.toLowerCase().trim())));
+                    searchTerm,
+                    sCategories.map(c => c.toLowerCase().trim()),
+                    sTags.map(t => t.toLowerCase().trim())));
         } else {
             setFilteredResults(unfiltered);
         }
@@ -107,33 +108,22 @@ export default function Home() {
 
     return (
         <main className="min-h-max bg-white flex flex-col">
-            <div className="px-5 md:px-10 pt-10">
+            <div className="px-5 md:px-10 pt-2">
                 <div className="p-4">
                     <h1 className="text-4xl font-bold pb-8 text-[#0C2B35]">
                         Inventory
                     </h1>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="#EE7200"
-                        className="w-6 h-6 absolute m-2 ml-4"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
+                    <Search className="w-6 h-6 absolute m-2 ml-4 text-[#EE7200]" />
                     <input
                         onInput={handleSearch}
                         value={searchInput}
                         placeholder="Search for an item"
-                        className="bg-gray-100 w-full placeholder-[#B7B7B7] pl-12 p-2 outline outline-[2px] outline-[#496767] rounded-3xl text-[#0C2B35] w-[268px]"
+                        className="bg-gray-100 w-full placeholder-[#B7B7B7] pl-12 p-2 outline outline-[2px] outline-[#496767] rounded-3xl text-[#0C2B35]"
                     ></input>
                 </div>
                 <div className="flex flex-col">
                     <div className="flex flex-row flex-wrap">
-                        <div className="w-full md:w-[300px]">
+                        <div className="w-full md:w-[300px] h-20">
                             <SelectionComponent
                                 tags={categories}
                                 setTags={setCategories}
@@ -142,7 +132,7 @@ export default function Home() {
                                 category="category"
                             ></SelectionComponent>
                         </div>
-                        <div className="w-full md:w-[300px]">
+                        <div className="w-full md:w-[300px] h-20">
                             <SelectionComponent
                                 tags={tags}
                                 setTags={setTags}
@@ -152,14 +142,14 @@ export default function Home() {
                             ></SelectionComponent>
                         </div>
                     </div>
-                    <div className="p-4 border-zinc-950">
-                        <DisplayComponent
-                            selectedTags={selectedTags}
-                            setSelectedTags={setSelectedTags}
-                            selectedCategories={selectedCategories}
-                            setSelectedCategories={setSelectedCategories}
-                        ></DisplayComponent>
-                    </div>
+                </div>
+                <div className="px-4 border-zinc-950 min-h-[56px]">
+                    <DisplayComponent
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                        selectedCategories={selectedCategories}
+                        setSelectedCategories={setSelectedCategories}
+                    ></DisplayComponent>
                 </div>
             </div>
             <div className="bg-[#B4CDCA] w-full h-2 mb-5 md:mb-10"></div>

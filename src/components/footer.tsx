@@ -5,8 +5,10 @@ import React from "react";
 export default function Footer() {
     return (
         <div className="flex items-center flex-col mt-5 md:mt-10 py-2 bg-emerald-900 gap-2 text-stone-50 font-sans">
-            <p>Copyright ©2023. Theatre@First Inc.</p>
-            <p><a href="https://www.theatreatfirst.org/" className="underline">www.theatreatfirst.org</a></p>
+            <p>
+                © 2026 Theatre@First |
+                {" "}<a href="https://www.theatreatfirst.org/" className="underline">www.theatreatfirst.org</a>
+                </p>
             <p className="text-center">
                 Theatre@First is part of the Massachusetts Community Theatre
                 Corporation, a non-profit arts organization recognized by the
