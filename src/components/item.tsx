@@ -29,7 +29,6 @@ export default function Item(props: Props) {
                     width={288}
                     height={288}
                     className="w-full max-h-72 md:h-60 md:w-60 rounded-t-xl"
-                    unoptimized={false}
                     style={{ objectFit: "cover" }}
                 />
                 <div className="p-3">
