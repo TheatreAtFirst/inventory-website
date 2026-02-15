@@ -55,8 +55,8 @@ export default async function Page({ params }: { params: { id: number } }) {
                     src={ itemData.imageUrl || ImageNotFound}
                     className="overflow-hidden object-cover rounded-lg"
                     alt=""
-                    width={400}
-                    height={600}
+                    width={288}
+                    height={288}
                 />
                 <div className="py-10 lg:px-10 bg-white lg:w-[50%] space-y-5">
                     <div className="flex flex-row justify-between">
