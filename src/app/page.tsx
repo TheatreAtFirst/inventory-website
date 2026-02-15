@@ -153,7 +153,7 @@ export default function Home() {
                 </div>
             </div>
             <div className="bg-[#B4CDCA] w-full h-2 mb-5 md:mb-10"></div>
-            <div className="px-4 md:px-14">
+            <div className="px-14 md:px-28">
                 <Grid
                     components={filteredResults.map((result) => (
                         <Item
