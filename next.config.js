@@ -12,7 +12,7 @@ const nextConfig = {
         pathname: '/image-*.jpeg',
       },
     ],
-    minimumCacheTTL: 2678400, // 31 days
+    minimumCacheTTL: 2678400,
   },
   async redirects() {
     return [
